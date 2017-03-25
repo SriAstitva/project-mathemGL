@@ -22,14 +22,14 @@ void plotSine() {
 
         glVertex2d(0, 1);
         glVertex2d(0, -1);
-        /*for(int i=0 ; i<100 ; i++){
+        for(int i=0 ; i<100 ; i++){
             for(int j=0 ; j<100 ; j++){
                 if (i == j ){
                    glVertex2d(i * scaleFactorX, j * scaleFactorY);
                    glVertex2d(-i * scaleFactorX, -j * scaleFactorY);
                 }
             }
-        }*/
+        }
 	glEnd();
 
 	glBegin(GL_POINTS);
@@ -44,6 +44,7 @@ void plotSine() {
 	glFlush();
 
 	scaleFactorX += ZOOM;
+	scaleFactorY += ZOOM;
 
 	glutPostRedisplay();
 }
@@ -73,6 +74,7 @@ void plotCos() {
 	glFlush();
 
 	scaleFactorX += ZOOM;
+	scaleFactorY += ZOOM;
 
 	glutPostRedisplay();
 }
@@ -104,30 +106,34 @@ void plotTan() {
 	glFlush();
 
 	scaleFactorX += ZOOM;
+	scaleFactorY += ZOOM;
 
 	glutPostRedisplay();
 }
 
-void display(){
+int main(int argc, char** argv) {
     int type;
+	glutInit(&argc, argv);
+
     cout<< "Select option : \n 1) SIN() \n 2) COS() \n 3) TAN() \n" ;
     cin >> type;
-    switch(type) {
-        case 1 :  glutDisplayFunc(plotSine);;
-                  break ;
-        case 2 :  glutDisplayFunc(plotCos);
-                  break ;
-        case 3 :  glutDisplayFunc(plotTan);;
-                  break ;
-   }
-}
 
-int main(int argc, char** argv) {
-	glutInit(&argc, argv);
 	glutInitWindowSize(500, 500);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("Function Plot");
-	display();
+	
+	switch(type) {
+        case 1 :  
+        	glutDisplayFunc(plotSine);
+			cout<<"lim (x->0) (sin x / x ) = 1"<<endl;
+            break ;
+        case 2 :  
+        	glutDisplayFunc(plotCos);
+          	break ;
+        case 3 :  
+        	glutDisplayFunc(plotTan);
+          	break ;
+   	}
 	glutMainLoop();
 	return 0;
 }
