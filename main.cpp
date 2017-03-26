@@ -17,7 +17,6 @@ void plotSine() {
     double x = -4*PI, y;
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
-
 	glBegin(GL_LINES);
         glColor3f(0.5, 0.5, 0.5);
         glVertex2d(-1, 0);
@@ -165,11 +164,107 @@ void plotEllipse(){
 	glFlush();
 }
 
+void plotCircle(){
+    glClearColor(1,1,1,1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	float x,y,px,py,pt;
+        glBegin(GL_LINES);
+
+            x = 3*sin(t);
+            y = 3*cos(t);
+            glColor3f(1.0, 0, 0);
+            glVertex2f(0 *MULT_FACTOR,0*MULT_FACTOR);
+            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
+        glEnd();
+
+        glPointSize(4);
+        glBegin(GL_POINTS);
+            glColor3f(0.0, 0.0, 1.0);
+            glVertex2f(0 *MULT_FACTOR,0*MULT_FACTOR);
+            glColor3f(0, 0, 0);
+            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
+        glEnd();
+
+       glPointSize(2);
+       glBegin(GL_POINTS);
+            pt = 0;
+            while(pt<=t){
+              px = 3*sin(pt);
+              py = 3*cos(pt);
+              glColor3f(0.5, 0.5, 0.5);
+              glVertex2f(px*MULT_FACTOR,py*MULT_FACTOR);
+              pt = pt + PI / 5000;
+            }
+       glEnd();
+
+
+        if(t < 2*PI) {
+            t = t + PI / 5000;
+            glutPostRedisplay();
+        }
+
+	glFlush();
+}
+
+void plotParabola(){
+     glClearColor(0,0,0,1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	float x,y,px,py,pt,dx,dy;
+        glBegin(GL_LINES);
+
+            x = 0.5 *t * t;
+            y = 4 * 0.5 * t;
+
+            for (int i=0 ; i<10; i++){
+                dx = -0.5;
+                dy = i;
+                glVertex2f(dx*MULT_FACTOR,dy*MULT_FACTOR);
+                glVertex2f(dx*MULT_FACTOR,-dy*MULT_FACTOR);
+            }
+            glColor3f(1.0, 0, 0);
+            glVertex2f(-0.5 *MULT_FACTOR,y*MULT_FACTOR);
+            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
+            glColor3f(1.0, 0.0, 0.0);
+            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
+            glVertex2f(0.5*MULT_FACTOR,0*MULT_FACTOR);
+        glEnd();
+
+        glPointSize(4);
+        glBegin(GL_POINTS);
+            glColor3f(0.0, 0.0, 1.0);
+            glVertex2f(0.5 *MULT_FACTOR,0*MULT_FACTOR);
+            glVertex2f(-0.5 *MULT_FACTOR,y*MULT_FACTOR);
+            glColor3f(0, 0, 0);
+            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
+        glEnd();
+
+       glPointSize(2);
+       glBegin(GL_POINTS);
+            pt = 0;
+            while(pt<=t){
+              px = 0.5*t * t;
+              py = 4 *0.5*t;
+              glColor3f(0.5, 0.5, 0.5);
+              glVertex2f(px*MULT_FACTOR,py*MULT_FACTOR);
+              glVertex2f(px*MULT_FACTOR,-py*MULT_FACTOR);
+              pt = pt + PI / 5000;
+            }
+       glEnd();
+
+
+        if(t < 2*PI/1.45) {
+            t = t + PI / 5000;
+            glutPostRedisplay();
+        }
+
+	glFlush();
+}
+
 int main(int argc, char** argv) {
     int type;
 	glutInit(&argc, argv);
 
-    cout<< "Select option : \n 1) SIN() \n 2) COS() \n 3) TAN() \n 4) Ellipse \n" ;
+    cout<< "Select option : \n 1) SIN() \n 2) COS() \n 3) TAN() \n 4) Circle \n 5) Ellipse \n 6) Parabola \n" ;
     cin >> type;
 
 	glutInitWindowSize(500, 500);
@@ -188,7 +283,13 @@ int main(int argc, char** argv) {
         	glutDisplayFunc(plotTan);
           	break ;
         case 4 :
+        	glutDisplayFunc(plotCircle);
+          	break ;
+        case 5 :
         	glutDisplayFunc(plotEllipse);
+          	break ;
+        case 6 :
+        	glutDisplayFunc(plotParabola);
           	break ;
    	}
 //    glutMouseFunc(getMouseCoordinates);
