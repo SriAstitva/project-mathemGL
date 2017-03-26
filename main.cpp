@@ -5,8 +5,10 @@
 #define PRECISION 0.0001
 #define ZOOM 0.01
 #define PI 3.14159265359
+#define MULT_FACTOR 0.1
 
 double scaleFactorX = 1 /(4 * PI), scaleFactorY = 0.25;
+float t = 0;
 
 using namespace std;
 
@@ -79,7 +81,6 @@ void plotCos() {
 	glutPostRedisplay();
 }
 
-
 void plotTan() {
     double x = -4*PI, y;
 	glClearColor(0.0f,0.0f,0.0f,1.0f);
@@ -111,27 +112,69 @@ void plotTan() {
 	glutPostRedisplay();
 }
 
+void plotEllipse(){
+    glClearColor(0.0f,0.0f,0.0f,1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+	float x,y,px,py,pt;
+        glColor3f(0.5, 0.5, 0.5);
+        glBegin(GL_LINES);
+            //for( t=0;t<360;t+=4){
+              x = 8*sin(t);
+              y = 3*cos(t);
+            glVertex2f(6 *MULT_FACTOR,0*MULT_FACTOR);
+            glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
+            glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
+            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
+            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
+            glVertex2f(6*MULT_FACTOR,0*MULT_FACTOR);
+            //}
+       glEnd();
+
+       glBegin(GL_POINTS);
+            pt = 0;
+            while(pt<=t){
+              px = 8*sin(pt);
+              py = 3*cos(pt);
+              glVertex2f(px*MULT_FACTOR,py*MULT_FACTOR);
+              pt = pt + PI / 5000;
+            }
+       glEnd();
+
+
+        if(t < 2*PI) {
+            t = t + PI / 5000;
+            glutPostRedisplay();
+        }
+
+	glFlush();
+}
+
 int main(int argc, char** argv) {
     int type;
 	glutInit(&argc, argv);
 
-    cout<< "Select option : \n 1) SIN() \n 2) COS() \n 3) TAN() \n" ;
+    cout<< "Select option : \n 1) SIN() \n 2) COS() \n 3) TAN() \n 4) Ellipse \n" ;
     cin >> type;
 
 	glutInitWindowSize(500, 500);
 	glutInitWindowPosition(0, 0);
 	glutCreateWindow("Function Plot");
-	
+
 	switch(type) {
-        case 1 :  
+        case 1 :
         	glutDisplayFunc(plotSine);
 			cout<<"lim (x->0) (sin x / x ) = 1"<<endl;
             break ;
-        case 2 :  
+        case 2 :
         	glutDisplayFunc(plotCos);
           	break ;
-        case 3 :  
+        case 3 :
         	glutDisplayFunc(plotTan);
+          	break ;
+        case 4 :
+        	glutDisplayFunc(plotEllipse);
+/*        	glutReshapeFunc(chEllipse);
+	        glutIdleFunc(plotEllipse);*/
           	break ;
    	}
 	glutMainLoop();
