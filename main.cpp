@@ -8,6 +8,7 @@
 #define MULT_FACTOR 0.1
 
 double scaleFactorX = 1 /(4 * PI), scaleFactorY = 0.25;
+int clickPosX, clickPosY;
 float t = 0;
 
 using namespace std;
@@ -112,29 +113,44 @@ void plotTan() {
 	glutPostRedisplay();
 }
 
+/*void getMouseCoordinates(int button, int state, int x, int y) {
+    clickPosX = x;
+    clickPosY = y;
+    cout<<"x:"<<x<<" y:"<<y;
+}*/
+
 void plotEllipse(){
-    glClearColor(0.0f,0.0f,0.0f,1.0f);
+    glClearColor(1,1,1,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	float x,y,px,py,pt;
-        glColor3f(0.5, 0.5, 0.5);
         glBegin(GL_LINES);
-            //for( t=0;t<360;t+=4){
-              x = 8*sin(t);
-              y = 3*cos(t);
-            glVertex2f(6 *MULT_FACTOR,0*MULT_FACTOR);
-            glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
+
+            x = 8*sin(t);
+            y = 3*cos(t);
+            glColor3f(1.0, 0, 0);
             glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
             glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
+            glColor3f(1.0, 0.0, 0.0);
             glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
             glVertex2f(6*MULT_FACTOR,0*MULT_FACTOR);
-            //}
-       glEnd();
+        glEnd();
 
+        glPointSize(4);
+        glBegin(GL_POINTS);
+            glColor3f(0.0, 0.0, 1.0);
+            glVertex2f(6 *MULT_FACTOR,0*MULT_FACTOR);
+            glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
+            glColor3f(0, 0, 0);
+            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
+        glEnd();
+
+       glPointSize(2);
        glBegin(GL_POINTS);
             pt = 0;
             while(pt<=t){
               px = 8*sin(pt);
               py = 3*cos(pt);
+              glColor3f(0.5, 0.5, 0.5);
               glVertex2f(px*MULT_FACTOR,py*MULT_FACTOR);
               pt = pt + PI / 5000;
             }
@@ -157,7 +173,7 @@ int main(int argc, char** argv) {
     cin >> type;
 
 	glutInitWindowSize(500, 500);
-	glutInitWindowPosition(0, 0);
+	glutInitWindowPosition(600, 100);
 	glutCreateWindow("Function Plot");
 
 	switch(type) {
@@ -173,10 +189,9 @@ int main(int argc, char** argv) {
           	break ;
         case 4 :
         	glutDisplayFunc(plotEllipse);
-/*        	glutReshapeFunc(chEllipse);
-	        glutIdleFunc(plotEllipse);*/
           	break ;
    	}
+//    glutMouseFunc(getMouseCoordinates);
 	glutMainLoop();
 	return 0;
 }
