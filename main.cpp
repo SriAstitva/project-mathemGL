@@ -123,11 +123,24 @@ void plotTan() {
 }*/
 
 void plotCircle(){
+
+    // Circle is being made using this eqn. x^2 + y^2 = 1
     glClearColor(1,1,1,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 	float x,y,px,py,pt;
         glBegin(GL_LINES);
 
+
+            // X Axis
+            glColor3f(0.9, 0.9, 0.9);
+            glVertex2d(-1, 0);
+            glVertex2d(1, 0);
+
+            // Y Axis
+            glVertex2d(0, 1);
+            glVertex2d(0, -1);
+
+            //Parametric Equations
             x = 3*sin(t);
             y = 3*cos(t);
             glColor3f(1.0, 0, 0);
@@ -146,6 +159,8 @@ void plotCircle(){
        glPointSize(2);
        glBegin(GL_POINTS);
             pt = 0;
+
+            // Loop to make locus till the point where drawing point has reached
             while(pt<=t){
               px = 3*sin(pt);
               py = 3*cos(pt);
@@ -155,7 +170,7 @@ void plotCircle(){
             }
        glEnd();
 
-
+       // Animation: Updating the parabola parameter if the drawing hasn't finished.
         if(t < 2*PI) {
             t = t + PI / 5000;
             glutPostRedisplay();
@@ -165,13 +180,26 @@ void plotCircle(){
 }
 
 void plotEllipse(){
+    // Ellipse is being made using this eqn. x^2 / 64 + y^2 / 9 = 1
     glClearColor(1,1,1,1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     float x,y,px,py,pt;
         glBegin(GL_LINES);
 
+            // X Axis
+            glColor3f(0.9, 0.9, 0.9);
+            glVertex2d(-1, 0);
+            glVertex2d(1, 0);
+
+            // Y Axis
+            glVertex2d(0, 1);
+            glVertex2d(0, -1);
+
+            //parametric Equations
             x = 8*sin(t);
             y = 3*cos(t);
+
+            // Lines joining Focii to Ellipse
             glColor3f(1.0, 0, 0);
             glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
             glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
@@ -180,6 +208,7 @@ void plotEllipse(){
             glVertex2f(6*MULT_FACTOR,0*MULT_FACTOR);
         glEnd();
 
+        
         glPointSize(4);
         glBegin(GL_POINTS);
             glColor3f(0.0, 0.0, 1.0);
@@ -192,16 +221,21 @@ void plotEllipse(){
        glPointSize(2);
        glBegin(GL_POINTS);
             pt = 0;
+
+            // Loop to make locus till the point where drawing point has reached
             while(pt<=t){
+
+              //Parametric Equations
               px = 8*sin(pt);
               py = 3*cos(pt);
               glColor3f(0.5, 0.5, 0.5);
               glVertex2f(px*MULT_FACTOR,py*MULT_FACTOR);
               pt = pt + PI / 5000;
+
             }
        glEnd();
 
-
+       // Animation: Updating the parabola parameter if the drawing hasn't finished.
         if(t < 2*PI) {
             t = t + PI / 5000;
             glutPostRedisplay();
