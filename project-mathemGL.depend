@@ -232,7 +232,7 @@
 1426329928 c:\program files (x86)\codeblocks\mingw\include\gl\freeglut_ext.h
 	<stdarg.h>
 
-1490456484 source:d:\downloads\nitr programming labs files\computer graphics laboratory\project\project-mathemgl\main.cpp
+1490723182 source:d:\downloads\nitr programming labs files\computer graphics laboratory\project\project-mathemgl\main.cpp
 	<gl/freeglut.h>
 	<iostream>
 	<cmath>

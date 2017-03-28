@@ -7,9 +7,14 @@
 #define PI 3.14159265359
 #define MULT_FACTOR 0.1
 
+#define PARABOLA_A 1.5          // Parabola semi-latus recum (a)
+#define PARABOLA_T 2.5          // Extremes of parabola parameter
+#define PARABOLA_DEL 0.0004     // Difference b/w parameter value b/w frames
+
 double scaleFactorX = 1 /(4 * PI), scaleFactorY = 0.25;
 int clickPosX, clickPosY;
 float t = 0;
+float tp = PARABOLA_T; // Parameter for Parabola
 
 using namespace std;
 
@@ -117,53 +122,6 @@ void plotTan() {
     cout<<"x:"<<x<<" y:"<<y;
 }*/
 
-void plotEllipse(){
-    glClearColor(1,1,1,1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	float x,y,px,py,pt;
-        glBegin(GL_LINES);
-
-            x = 8*sin(t);
-            y = 3*cos(t);
-            glColor3f(1.0, 0, 0);
-            glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
-            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
-            glColor3f(1.0, 0.0, 0.0);
-            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
-            glVertex2f(6*MULT_FACTOR,0*MULT_FACTOR);
-        glEnd();
-
-        glPointSize(4);
-        glBegin(GL_POINTS);
-            glColor3f(0.0, 0.0, 1.0);
-            glVertex2f(6 *MULT_FACTOR,0*MULT_FACTOR);
-            glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
-            glColor3f(0, 0, 0);
-            glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
-        glEnd();
-
-       glPointSize(2);
-       glBegin(GL_POINTS);
-            pt = 0;
-            while(pt<=t){
-              px = 8*sin(pt);
-              py = 3*cos(pt);
-              glColor3f(0.5, 0.5, 0.5);
-              glVertex2f(px*MULT_FACTOR,py*MULT_FACTOR);
-              pt = pt + PI / 5000;
-            }
-       glEnd();
-
-
-        if(t < 2*PI) {
-            t = t + PI / 5000;
-            glutPostRedisplay();
-        }
-
-	glFlush();
-}
-
-
 void plotCircle(){
     glClearColor(1,1,1,1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -206,34 +164,27 @@ void plotCircle(){
 	glFlush();
 }
 
-void plotParabola(){
-     glClearColor(0,0,0,1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
-	float x,y,px,py,pt,dx,dy;
+void plotEllipse(){
+    glClearColor(1,1,1,1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    float x,y,px,py,pt;
         glBegin(GL_LINES);
 
-            x = 0.5 *t * t;
-            y = 4 * 0.5 * t;
-
-            for (int i=0 ; i<10; i++){
-                dx = -0.5;
-                dy = i;
-                glVertex2f(dx*MULT_FACTOR,dy*MULT_FACTOR);
-                glVertex2f(dx*MULT_FACTOR,-dy*MULT_FACTOR);
-            }
+            x = 8*sin(t);
+            y = 3*cos(t);
             glColor3f(1.0, 0, 0);
-            glVertex2f(-0.5 *MULT_FACTOR,y*MULT_FACTOR);
+            glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
             glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
             glColor3f(1.0, 0.0, 0.0);
             glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
-            glVertex2f(0.5*MULT_FACTOR,0*MULT_FACTOR);
+            glVertex2f(6*MULT_FACTOR,0*MULT_FACTOR);
         glEnd();
 
         glPointSize(4);
         glBegin(GL_POINTS);
             glColor3f(0.0, 0.0, 1.0);
-            glVertex2f(0.5 *MULT_FACTOR,0*MULT_FACTOR);
-            glVertex2f(-0.5 *MULT_FACTOR,y*MULT_FACTOR);
+            glVertex2f(6 *MULT_FACTOR,0*MULT_FACTOR);
+            glVertex2f(-6 *MULT_FACTOR,0*MULT_FACTOR);
             glColor3f(0, 0, 0);
             glVertex2f(x*MULT_FACTOR,y*MULT_FACTOR);
         glEnd();
@@ -242,20 +193,94 @@ void plotParabola(){
        glBegin(GL_POINTS);
             pt = 0;
             while(pt<=t){
-              px = 0.5*t * t;
-              py = 4 *0.5*t;
+              px = 8*sin(pt);
+              py = 3*cos(pt);
               glColor3f(0.5, 0.5, 0.5);
               glVertex2f(px*MULT_FACTOR,py*MULT_FACTOR);
-              glVertex2f(px*MULT_FACTOR,-py*MULT_FACTOR);
               pt = pt + PI / 5000;
             }
        glEnd();
 
 
-        if(t < 2*PI/1.45) {
+        if(t < 2*PI) {
             t = t + PI / 5000;
             glutPostRedisplay();
         }
+
+    glFlush();
+}
+
+void plotParabola() {
+    // Parabola is being made using this eqn. y^2 = 4 * a * x
+    float x, y, px, py, pt;
+
+    glClearColor(1, 1, 1, 1);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+    glBegin(GL_LINES);
+        x = PARABOLA_A * tp * tp;
+        y = 2 * PARABOLA_A * tp;
+
+        // X Axis
+        glColor3f(0.9, 0.9, 0.9);
+        glVertex2d(-1, 0);
+        glVertex2d(1, 0);
+
+        // Y Axis
+        glVertex2d(0, 1);
+        glVertex2d(0, -1);
+
+        // Directrix
+        glColor3f(0, 0, 0);
+        glVertex2f(-PARABOLA_A * MULT_FACTOR, 1);
+        glVertex2f(-PARABOLA_A * MULT_FACTOR, -1);
+
+        // Line joining Directrix to Parabola
+        glColor3f(1, 0, 0);
+        glVertex2f(-PARABOLA_A * MULT_FACTOR, y * MULT_FACTOR);
+        glVertex2f(x * MULT_FACTOR, y * MULT_FACTOR);
+
+        // Line joining Focus to Parabola
+        glVertex2f(x * MULT_FACTOR, y * MULT_FACTOR);
+        glVertex2f(PARABOLA_A * MULT_FACTOR, 0 * MULT_FACTOR);
+    glEnd();
+
+    glPointSize(4);
+    glBegin(GL_POINTS);
+
+        // Focus
+        glColor3f(0, 0, 1);
+        glVertex2f(PARABOLA_A * MULT_FACTOR, 0 * MULT_FACTOR);
+
+        // Point (wrt. y-coordinate) on Directrix
+        glVertex2f(-PARABOLA_A * MULT_FACTOR, y * MULT_FACTOR);
+
+        // Point on the Parabola (where it is being drawn)
+        glColor3f(0, 0, 0);
+        glVertex2f(x * MULT_FACTOR, y * MULT_FACTOR);
+    glEnd();
+
+    glPointSize(2);
+    glBegin(GL_POINTS);
+        pt = PARABOLA_T;
+        // Loop to make locus till the point where drawing point has reached
+        while(pt >= tp) {
+          px = PARABOLA_A * pt * pt;
+          py = 2 * PARABOLA_A * pt;
+
+          glColor3f(0.5, 0.5, 0.5);
+
+          glVertex2f(px * MULT_FACTOR, py * MULT_FACTOR);
+
+          pt = pt - PARABOLA_DEL;
+        }
+    glEnd();
+
+    // Animation: Updating the parabola parameter if the drawing hasn't finished.
+    if(tp <= PARABOLA_T && tp >= -PARABOLA_T) {
+        tp = tp - PARABOLA_DEL;
+        glutPostRedisplay();
+    }
 
 	glFlush();
 }
