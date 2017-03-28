@@ -21,7 +21,6 @@ void plotSine() {
         glColor3f(0.5, 0.5, 0.5);
         glVertex2d(-1, 0);
         glVertex2d(1, 0);
-
         glVertex2d(0, 1);
         glVertex2d(0, -1);
         for(int i=0 ; i<100 ; i++){
@@ -163,6 +162,7 @@ void plotEllipse(){
 
 	glFlush();
 }
+
 
 void plotCircle(){
     glClearColor(1,1,1,1.0f);
