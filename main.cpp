@@ -15,6 +15,12 @@ double scaleFactorX = 1 /(4 * PI), scaleFactorY = 0.25;
 int clickPosX, clickPosY;
 float t = 0;
 float tp = PARABOLA_T; // Parameter for Parabola
+float transZ = -6, rotAngle = 0; // Constants for Conic Generation
+
+// maxAngle: Ellipse: -150, Circle: -180, Parabola: -110, Hyperbola: -90
+// maxTranslation: Ellipse, Circle: -2.2, Parabola: -2.2, Hyperbola: -2.4
+// yTranslation: Ellipse: -0.2, Circle: 0, Parabola: -0.2, Hyperbola: -0.4
+float maxAngle = -150, maxTranslationZ = -2.2, yTranslation = -0.2;
 
 using namespace std;
 
@@ -285,11 +291,47 @@ void plotParabola() {
 	glFlush();
 }
 
+void generateConic() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_MODELVIEW);
+
+    glLoadIdentity();
+    glTranslatef(0.0f, yTranslation, transZ);
+    glRotatef(rotAngle, 1, 0, 0);
+    glColor3f(1, 1, 1);
+    glutWireCone(1,2,100,50);
+
+    if( rotAngle > maxAngle ) {
+        rotAngle = rotAngle - 0.05;
+        glutPostRedisplay();
+    }
+
+    if(rotAngle <= maxAngle && transZ <= maxTranslationZ) {
+       transZ = transZ + 0.0005;
+       glutPostRedisplay();
+    }
+    glFlush();  // Swap the front and back frame buffers (double buffering)
+}
+
+void reshapeConic(GLsizei width, GLsizei height) {
+   if (height == 0) height = 1;
+
+   GLfloat aspect = (GLfloat)width / (GLfloat)height;
+
+   glViewport(0, 0, width, height);
+
+   glMatrixMode(GL_PROJECTION);
+   glLoadIdentity();
+
+   gluPerspective(45.0f, aspect, 3.0f, 100.0f);
+}
+
 int main(int argc, char** argv) {
     int type;
 	glutInit(&argc, argv);
 
-    cout<< "Select option : \n 1) SIN() \n 2) COS() \n 3) TAN() \n 4) Circle \n 5) Ellipse \n 6) Parabola \n" ;
+    cout<< "Select option : \n 1) Sine() \n 2) Cosine() \n 3) Tangent() \n 4) Circle \n 5) Ellipse \n 6) Parabola \n "
+        << "7) Generate Ellipse \n 8) Generate Circle \n 9) Generate Parabola \n 10) Generate Hyperbola \n ";
     cin >> type;
 
 	glutInitWindowSize(500, 500);
@@ -316,6 +358,26 @@ int main(int argc, char** argv) {
         case 6 :
         	glutDisplayFunc(plotParabola);
           	break ;
+        case 7 :
+            maxAngle = -150, maxTranslationZ = -2.2, yTranslation = -0.2;
+            glutDisplayFunc(generateConic);
+            glutReshapeFunc(reshapeConic);
+            break;
+        case 8 :
+            maxAngle = -180, maxTranslationZ = -2.2, yTranslation = 0;
+            glutDisplayFunc(generateConic);
+            glutReshapeFunc(reshapeConic);
+            break;
+        case 9 :
+            maxAngle = -110, maxTranslationZ = -2.2, yTranslation = -0.2;
+            glutDisplayFunc(generateConic);
+            glutReshapeFunc(reshapeConic);
+            break;
+        case 10 :
+            maxAngle = -90, maxTranslationZ = -2.4, yTranslation = -0.4;
+            glutDisplayFunc(generateConic);
+            glutReshapeFunc(reshapeConic);
+            break;
    	}
 //    glutMouseFunc(getMouseCoordinates);
 	glutMainLoop();
