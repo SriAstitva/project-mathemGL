@@ -73,6 +73,9 @@ void plotCos() {
 
         glVertex2d(0, 1);
         glVertex2d(0, -1);
+
+        glVertex2d(-1, 1 * scaleFactorY);
+        glVertex2d(1, 1 * scaleFactorY);
 	glEnd();
 
 	glBegin(GL_POINTS);
@@ -86,7 +89,6 @@ void plotCos() {
 	glFlush();
 
 	scaleFactorX += ZOOM;
-	scaleFactorY += ZOOM;
 
 	glutPostRedisplay();
 }
@@ -103,6 +105,15 @@ void plotTan() {
 
         glVertex2d(0, 1);
         glVertex2d(0, -1);
+
+        for(int i=0 ; i<100 ; i++){
+            for(int j=0 ; j<100 ; j++){
+                if (i == j ){
+                   glVertex2d(i * scaleFactorX, j * scaleFactorY);
+                   glVertex2d(-i * scaleFactorX, -j * scaleFactorY);
+                }
+            }
+        }
 	glEnd();
 
 	glBegin(GL_POINTS);
@@ -121,12 +132,6 @@ void plotTan() {
 
 	glutPostRedisplay();
 }
-
-/*void getMouseCoordinates(int button, int state, int x, int y) {
-    clickPosX = x;
-    clickPosY = y;
-    cout<<"x:"<<x<<" y:"<<y;
-}*/
 
 void plotCircle(){
 
@@ -176,7 +181,7 @@ void plotCircle(){
             }
        glEnd();
 
-       // Animation: Updating the parabola parameter if the drawing hasn't finished.
+       // Animation: Updating the circle parameter if the drawing hasn't finished.
         if(t < 2*PI) {
             t = t + PI / 5000;
             glutPostRedisplay();
@@ -214,7 +219,7 @@ void plotEllipse(){
             glVertex2f(6*MULT_FACTOR,0*MULT_FACTOR);
         glEnd();
 
-        
+
         glPointSize(4);
         glBegin(GL_POINTS);
             glColor3f(0.0, 0.0, 1.0);
@@ -241,7 +246,7 @@ void plotEllipse(){
             }
        glEnd();
 
-       // Animation: Updating the parabola parameter if the drawing hasn't finished.
+       // Animation: Updating the ellipse parameter if the drawing hasn't finished.
         if(t < 2*PI) {
             t = t + PI / 5000;
             glutPostRedisplay();
@@ -333,10 +338,10 @@ void generateConic() {
     glTranslatef(0.0f, yTranslation, transZ);
     glRotatef(rotAngle, 1, 0, 0);
     glColor3f(1, 1, 1);
-    glutWireCone(1,2,100,50);
+    glutWireCone(1,2,150,50);
 
     if( rotAngle > maxAngle ) {
-        rotAngle = rotAngle - 0.05;
+        rotAngle = rotAngle - 0.03;
         glutPostRedisplay();
     }
 
@@ -344,7 +349,7 @@ void generateConic() {
        transZ = transZ + 0.0005;
        glutPostRedisplay();
     }
-    glFlush();  // Swap the front and back frame buffers (double buffering)
+    glFlush();
 }
 
 void reshapeConic(GLsizei width, GLsizei height) {
@@ -364,56 +369,71 @@ int main(int argc, char** argv) {
     int type;
 	glutInit(&argc, argv);
 
-    cout<< "Select option : \n 1) Sine() \n 2) Cosine() \n 3) Tangent() \n 4) Circle \n 5) Ellipse \n 6) Parabola \n "
+    cout<< "Select option : \n 1) Sine \n 2) Cosine \n 3) Tangent \n 4) Circle \n 5) Ellipse \n 6) Parabola \n "
         << "7) Generate Ellipse \n 8) Generate Circle \n 9) Generate Parabola \n 10) Generate Hyperbola \n ";
     cin >> type;
 
 	glutInitWindowSize(500, 500);
-	glutInitWindowPosition(600, 100);
-	glutCreateWindow("Function Plot");
+	glutInitWindowPosition(800, 100);
+	glutCreateWindow("Project MathemGL: Display");
 
 	switch(type) {
         case 1 :
         	glutDisplayFunc(plotSine);
-			cout<<"lim (x->0) (sin x / x ) = 1"<<endl;
+			cout<<endl<<"lim (x->0) (sin x / x ) = 1"<<endl;
             break ;
         case 2 :
         	glutDisplayFunc(plotCos);
+        	cout<<endl<<"lim (x->0) (cos x) = 1"<<endl;
           	break ;
         case 3 :
         	glutDisplayFunc(plotTan);
+        	cout<<endl<<"lim (x->0) (tan x / x ) = 1"<<endl;
           	break ;
         case 4 :
         	glutDisplayFunc(plotCircle);
+        	cout<<endl<<"Circle is the locus of all the points\n at equidistant from a given \nfixed point, Center.";
           	break ;
         case 5 :
         	glutDisplayFunc(plotEllipse);
+        	cout<<endl<<"Ellipse is the locus of all the points\n such that sum of distances of the point from \ntwo given fixed points, Focii is constant.";
           	break ;
         case 6 :
         	glutDisplayFunc(plotParabola);
+        	cout<<endl<<"Parabola is the locus of all the points\n at equidistant from a given \nfixed point, Focus and a line, Directrix.";
           	break ;
         case 7 :
+            // Ellipse
             maxAngle = -150, maxTranslationZ = -2.2, yTranslation = -0.2;
             glutDisplayFunc(generateConic);
             glutReshapeFunc(reshapeConic);
+            cout<<endl<<"Ellipse is a conic section \nobtained by cutting the cone by a plane at angle < 90 wrt base.";
             break;
         case 8 :
+            // Circle
             maxAngle = -180, maxTranslationZ = -2.2, yTranslation = 0;
             glutDisplayFunc(generateConic);
             glutReshapeFunc(reshapeConic);
+            cout<<endl<<"Circle is a conic section \nobtained by cutting the cone by a plane parallel to the base.";
             break;
         case 9 :
+            // Parabola
             maxAngle = -110, maxTranslationZ = -2.2, yTranslation = -0.2;
             glutDisplayFunc(generateConic);
             glutReshapeFunc(reshapeConic);
+            cout<<endl<<"Parabola is a conic section \nobtained by cutting the cone by a plane at angle > 0 (!= 0) wrt its axis.";
             break;
         case 10 :
+            // Hyperbola
             maxAngle = -90, maxTranslationZ = -2.4, yTranslation = -0.4;
             glutDisplayFunc(generateConic);
             glutReshapeFunc(reshapeConic);
+            cout<<endl<<"Hyperbola is a conic section \nobtained by cutting the cone by a plane parallel to its axis.";
+            break;
+        default:
+            cout<<"Enter a value b/w 1 and 10"<<endl<<endl;
             break;
    	}
-//    glutMouseFunc(getMouseCoordinates);
 	glutMainLoop();
 	return 0;
 }
